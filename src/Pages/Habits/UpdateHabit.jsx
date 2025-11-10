@@ -2,154 +2,184 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 
-const UpdateTransactions = () => {
+const UpdateHabit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [transaction, setTransaction] = useState(null);
+  const [habit, setHabit] = useState(null);
+  const [newImage, setNewImage] = useState(null);
 
   useEffect(() => {
-    fetch(`https://finease-server-c7jy.onrender.com/transactions/${id}`)
+    fetch(`http://localhost:3000/habits/${id}`)
       .then((res) => res.json())
-      .then((data) => setTransaction(data))
-      .catch((err) => console.error("Error loading transaction:", err));
+      .then((data) => setHabit(data))
+      .catch((err) => console.error("Error loading habit:", err));
   }, [id]);
 
-  const handleUpdateTransaction = async (e) => {
+  //=== Image Upload to ImgBB (optional new image) ===//
+  const uploadImageToImgbb = async (file) => {
+    const form = new FormData();
+    form.append("image", file);
+
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=d9c3fc2ae4b6969c4cec0676a44db6cf`,
+      {
+        method: "POST",
+        body: form,
+      }
+    );
+
+    const data = await res.json();
+    return data.data.url; // return hosted image link
+  };
+
+  const handleUpdateHabit = async (e) => {
     e.preventDefault();
     const form = e.target;
 
-    const updatedTransaction = {
-      type: form.type.value,
-      category: form.category.value,
-      amount: parseFloat(form.amount.value),
+    let imageURL = habit.image;
+
+    // If new image uploaded → upload to ImgBB
+    if (newImage) {
+      imageURL = await uploadImageToImgbb(newImage);
+    }
+
+    const updatedHabit = {
+      title: form.title.value,
       description: form.description.value,
-      date: form.date.value,
+      category: form.category.value,
+      image: imageURL,
     };
 
-    const res = await fetch(`https://finease-server-c7jy.onrender.com/transactions/update/${id}`, {
+    const res = await fetch(`http://localhost:3000/habits/update/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedTransaction),
+      body: JSON.stringify(updatedHabit),
     });
 
     if (res.ok) {
-      toast.success("Transaction updated successfully!");
-      navigate(`/transactions/${id}`);
+      toast.success("Habit updated successfully!");
+      setTimeout(() => navigate(`/habits/${id}`), 1200);
     } else {
-      toast.error("Failed to update transaction!");
+      toast.error("Failed to update habit!");
     }
   };
 
-  if (!transaction) {
+  if (!habit) {
     return (
-      <div className="flex justify-center items-center h-screen text-gray-400 text-lg">
-        Loading transaction data...
+      <div className="flex justify-center items-center h-screen text-gray-500 text-xl">
+        Loading habit...
       </div>
     );
   }
 
   return (
     <div className="min-h-screen py-10 px-4">
-      <div className="max-w-lg mx-auto bg-white p-8 rounded-3xl shadow-2xl border border-gray-100">
+      <div className="max-w-lg mx-auto bg-white p-8 rounded-3xl shadow-2xl border border-gray-200">
+
         <h2 className="text-3xl font-bold text-center text-indigo-600 mb-6">
-          Update Transaction
+          Update Habit
         </h2>
 
-        <form onSubmit={handleUpdateTransaction} className="space-y-2">
-          {/* Type */}
+        <form onSubmit={handleUpdateHabit} className="space-y-3">
+
+          {/* User Name (disabled) */}
           <div className="form-control">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Type
-            </label>
-            <select
-              name="type"
-              defaultValue={transaction.type}
+            <label className="font-semibold">User Name</label>
+            <input
+              type="text"
+              disabled
+              defaultValue={habit.user_name}
+              className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+            />
+          </div>
+
+          {/* Email (disabled) */}
+          <div className="form-control">
+            <label className="font-semibold">Email</label>
+            <input
+              type="email"
+              disabled
+              defaultValue={habit.user_email}
+              className="input input-bordered w-full bg-gray-100 cursor-not-allowed"
+            />
+          </div>
+
+          {/* Title */}
+          <div className="form-control">
+            <label className="font-semibold">Habit Title</label>
+            <input
+              type="text"
+              name="title"
               required
-              className="select select-bordered w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-            >
-              <option value="">Select type</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-            </select>
+              defaultValue={habit.title}
+              className="input input-bordered w-full"
+            />
           </div>
 
           {/* Category */}
           <div className="form-control">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Category
-            </label>
+            <label className="font-semibold">Category</label>
             <select
               name="category"
-              defaultValue={transaction.category}
               required
-              className="select select-bordered w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+              defaultValue={habit.category}
+              className="select select-bordered w-full"
             >
               <option value="">Select category</option>
-              <option value="Salary">Salary</option>
-              <option value="Food">Food</option>
-              <option value="Shopping">Shopping</option>
-              <option value="Transport">Transport</option>
-              <option value="Bills">Bills</option>
+              <option value="Health">Health</option>
+              <option value="Study">Study</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Productivity">Productivity</option>
+              <option value="Mindfulness">Mindfulness</option>
               <option value="Other">Other</option>
             </select>
           </div>
 
-          {/* Amount */}
-          <div className="form-control">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Amount
-            </label>
-            <input
-              type="number"
-              name="amount"
-              defaultValue={transaction.amount}
-              placeholder="Enter amount"
-              required
-              className="input input-bordered w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
-            />
-          </div>
-
           {/* Description */}
           <div className="form-control">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Description
-            </label>
+            <label className="font-semibold">Description</label>
             <textarea
               name="description"
-              defaultValue={transaction.description}
-              placeholder="Short description"
               required
-              className="textarea textarea-bordered w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none h-24 resize-none"
+              defaultValue={habit.description}
+              className="textarea textarea-bordered w-full h-24 resize-none"
             ></textarea>
           </div>
 
-          {/* Date */}
-          <div className="form-control">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Date
-            </label>
-            <input
-              type="date"
-              name="date"
-              defaultValue={transaction.date?.slice(0, 10)}
-              required
-              className="input input-bordered w-full focus:ring-2 focus:ring-indigo-400 focus:outline-none"
+          {/* Current Image */}
+          <div>
+            <label className="font-semibold">Current Image</label>
+            <img
+              src={habit.image}
+              alt=""
+              className="w-full h-40 object-cover rounded-xl mt-2"
             />
           </div>
 
-          {/* Button */}
+          {/* Upload New Image (optional) */}
+          <div className="form-control mt-3">
+            <label className="font-semibold">Upload New Image (optional)</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setNewImage(e.target.files[0])}
+              className="file-input file-input-bordered w-full"
+            />
+          </div>
+
+          {/* Update Button */}
           <button
             type="submit"
-            className="btn bg-indigo-600 hover:bg-indigo-700 text-white w-full mt-4 text-lg font-semibold rounded-xl shadow-md transition-all"
+            className="btn bg-indigo-600 hover:bg-indigo-700 w-full text-white mt-4 font-semibold rounded-xl"
           >
-            Update Transaction
+            Update Habit
           </button>
         </form>
 
-        <ToastContainer position="bottom-center" autoClose={2000} />
+        <ToastContainer position="bottom-center" autoClose={1500} />
       </div>
     </div>
   );
 };
 
-export default UpdateTransactions;
+export default UpdateHabit;

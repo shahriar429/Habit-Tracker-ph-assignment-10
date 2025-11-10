@@ -1,102 +1,163 @@
-import React, { useEffect, useState, use } from "react";
-import { AuthContext } from "../../provider/AuthProvider";
-import { useLoaderData } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
 
-const TransactionDetails = () => {
-  const { user } = use(AuthContext);
-  const transactionData = useLoaderData();
-  const [transaction] = useState(transactionData);
-  const [categoryIncome, setCategoryIncome] = useState(0);
-  const [categoryExpense, setCategoryExpense] = useState(0);
+const HabitDetails = () => {
+  const { id } = useParams();
+  const [habit, setHabit] = useState(null);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch habit details
   useEffect(() => {
-    if (transaction && user?.email) {
-      fetch(
-        `https://finease-server-c7jy.onrender.com/transactions?email=${user.email}&category=${transaction.category}`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          const incomeTotal = data
-            .filter((t) => t.type === "Income")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+    fetch(`http://localhost:3000/habits/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setHabit(data);
+        setLoading(false);
+      });
+  }, [id]);
 
-          const expenseTotal = data
-            .filter((t) => t.type === "Expense")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+  // === Calculate 30-day progress ===
+  const getProgress = () => {
+    if (!habit?.completionHistory) return 0;
 
-          setCategoryIncome(incomeTotal);
-          setCategoryExpense(expenseTotal);
-        });
+    const last30 = [];
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      last30.push(d.toISOString().split("T")[0]);
     }
-  }, [transaction, user]);
 
-  if (!transaction) return <p>Loading transaction details...</p>;
+    const completedDays = habit.completionHistory.filter((d) =>
+      last30.includes(d)
+    );
+
+    return Math.round((completedDays.length / 30) * 100);
+  };
+
+  // === Calculate daily streak ===
+  const getStreak = () => {
+    if (!habit?.completionHistory || habit.completionHistory.length === 0)
+      return 0;
+
+    const dates = habit.completionHistory
+      .map((d) => new Date(d))
+      .sort((a, b) => b - a);
+
+    let streak = 0;
+    let checkDate = new Date(); // today
+
+    for (let date of dates) {
+      const dateStr = date.toISOString().split("T")[0];
+      const checkStr = checkDate.toISOString().split("T")[0];
+
+      if (dateStr === checkStr) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else if (dateStr < checkStr) {
+        break;
+      }
+    }
+
+    return streak;
+  };
+
+  // === Mark Complete Handler ===
+  const handleMarkComplete = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/habits/complete/${id}`,
+        {
+          method: "PATCH",
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Update UI instantly
+        setHabit((prev) => ({
+          ...prev,
+          completionHistory: [
+            ...(prev.completionHistory || []),
+            new Date().toISOString().split("T")[0],
+          ],
+        }));
+        toast.success("Habit marked as complete!");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
+    }
+  };
+
+  if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div>
-      <div className="p-6 max-w-3xl mx-auto">
-        <h2 className="text-4xl font-bold mb-6 text-center text-indigo-600">
-          Transaction Details
-        </h2>
+    <div className="max-w-3xl mx-auto p-6 shadow rounded mt-10">
+      {/* Habit Image */}
+      {habit.image && (
+        <img
+          src={habit.image}
+          alt="habit"
+          className="w-full h-60 object-cover rounded mb-5"
+        />
+      )}
 
-        <div className="bg-white shadow-xl rounded-2xl p-6 border border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <span
-              className={`px-4 py-1 rounded-full font-semibold text-white ${
-                transaction.type === "Income" ? "bg-green-500" : "bg-red-500"
-              }`}
-            >
-              {transaction.type}
-            </span>
-            <span className="text-gray-500 text-sm font-bold">
-              {transaction.date
-                ? new Date(transaction.date).toLocaleDateString()
-                : "N/A"}
-            </span>
-          </div>
+      {/* Habit Title */}
+      <h2 className="text-3xl font-bold mb-2">{habit.title}</h2>
 
-          <div className="mb-2">
-            <p className="text-gray-600 font-medium">Category:</p>
-            <p className="text-xl font-bold text-indigo-700">
-              {transaction.category}
-            </p>
-          </div>
+      {/* Category */}
+      <p className="text-gray-700 mb-2">
+        <strong>Category:</strong> {habit.category}
+      </p>
 
-          <div className="mb-2">
-            <p className="text-gray-600 font-medium">Description:</p>
-            <p className="text-gray-800">
-              {transaction.description || "No description"}
-            </p>
-          </div>
+      {/* Description */}
+      <p className="mb-4">
+        <strong>Description:</strong> {habit.description}
+      </p>
 
-          <div className="mb-4">
-            <p className="text-gray-600 font-medium">Amount:</p>
-            <p
-              className={`text-2xl font-bold ${
-                transaction.type === "Income"
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              ${transaction.amount}
-            </p>
-          </div>
-
-          <div className="mt-6 p-4 bg-indigo-50 rounded-lg text-center">
-            <p className="text-gray-700 font-medium mb-2 text-2xl">
-              Total in this Category
-            </p>
-            <p className="text-lg font-semibold text-green-600">
-              Total Income: ${categoryIncome}
-            </p>
-            <p className="text-lg font-semibold text-red-600">
-              Total Expenses: ${categoryExpense}
-            </p>
-          </div>
-        </div>
+      {/* Creator Info */}
+      <div className="mb-4 p-4 bg-gray-100 rounded">
+        <p><strong>Created By:</strong> {habit.user_name || "Unknown"}</p>
+        <p><strong>Email:</strong> {habit.user_email || "N/A"}</p>
+        <p>
+          <strong>Created Date:</strong>{" "}
+          {habit.createdAt
+            ? new Date(habit.createdAt).toLocaleDateString()
+            : "N/A"}
+        </p>
       </div>
+
+      {/* Streak */}
+      <p className="mb-3 text-lg font-semibold">🔥 Streak: {getStreak()} days</p>
+
+      {/* Progress Bar */}
+      <div className="mb-5">
+        <p className="mb-1 font-medium">Last 30 Days Progress</p>
+        <div className="w-full bg-gray-300 rounded h-4">
+          <div
+            className="bg-green-600 h-4 rounded"
+            style={{ width: `${getProgress()}%` }}
+          ></div>
+        </div>
+        <p>{getProgress()}% completed</p>
+      </div>
+
+      {/* Mark Complete Button */}
+      <button
+        onClick={handleMarkComplete}
+        className="bg-blue-600 text-white px-6 py-2 rounded mt-4"
+      >
+        Mark Complete
+      </button>
+
+      <ToastContainer />
     </div>
   );
 };
 
-export default TransactionDetails;
+export default HabitDetails;

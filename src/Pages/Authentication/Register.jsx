@@ -20,7 +20,7 @@ const Register = () => {
   const checkDuplicateEmail = async (email) => {
     try {
       const res = await fetch(
-        `https://finease-server-c7jy.onrender.com/users?email=${email}`
+        `http://localhost:3000/users?email=${email}`
       );
       const data = await res.json();
       return data.length > 0;
@@ -59,7 +59,7 @@ const Register = () => {
     createUser(email, password)
       .then(() => {
         const newUser = { name, email, image: photo };
-        fetch("https://finease-server-c7jy.onrender.com/users", {
+        fetch("http://localhost:3000/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(newUser),
@@ -90,7 +90,7 @@ const Register = () => {
           return;
         }
 
-        fetch("https://finease-server-c7jy.onrender.com/users", {
+        fetch("http://localhost:3000/users", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(googleUser),

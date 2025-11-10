@@ -1,16 +1,65 @@
-# React + Vite
+# ⏰ Habitify – Smart Habit Tracking Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live Website:** [https://habit-tracker-6479d.web.app//](https://habit-tracker-6479d.web.app//)
 
-Currently, two official plugins are available:
+Habitify is a modern Habit Tracking Web Application that helps users build positive habits through streaks, reminders, progress tracking, and a clean user-friendly dashboard.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **👤 User Authentication**  
+  Secure login & registration using Firebase Authentication (Email/Password + Google Login)
 
-## Expanding the ESLint configuration
+- **📝 Habit Management (CRUD)**  
+  Users can create, view, update, and delete habits
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **🌍 Public Habit Explorer**  
+  Browse all public habits created by other users
+
+- **⭐ Featured Habits**  
+  Displays the newest 6 public habits from the database
+
+- **📊 Habit Details Page**
+  - Title, Description, Category, Image  
+  - 30-day progress tracking  
+  - Streak counter & badges  
+  - Creator information  
+  - “Mark Complete” button with same-day duplicate prevention
+
+- **⏰ Habit Reminders**  
+  Set custom reminder times for each habit
+
+- **📸 Image Upload Support**  
+  Upload habit images using ImgBB API
+
+- **🔒 Private Routes**  
+  Only authenticated users can access specific pages (habit details, dashboard)
+
+- **📱 Fully Responsive UI**  
+  Modern, clean interface built using Tailwind CSS & DaisyUI
+
+---
+
+## 🛠️ Technologies Used
+
+### **Frontend**
+- React.js  
+- React Router  
+- Tailwind CSS  
+- DaisyUI  
+- Firebase Authentication  
+- React Toastify  
+
+### **Backend**
+- Node.js  
+- Express.js  
+- MongoDB  
+
+---
+
+## 📦 Installation (Local Development)
+
+### **1. Clone the repository**
+```bash
+git clone https://github.com/shahriar429/Habit-Tracker-ph-assignment-10

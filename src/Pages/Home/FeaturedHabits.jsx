@@ -1,63 +1,58 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { motion } from "framer-motion";
 
 const FeaturedHabits = () => {
   const [habits, setHabits] = useState([]);
 
   useEffect(() => {
-    fetch("https://your-server-url.com/habits/public")
+    fetch("http://localhost:3000/featured-habits")
       .then((res) => res.json())
-      .then((data) => setHabits(data.slice(0, 6)));
+      .then((data) => setHabits(data))
+      .catch((err) => console.error("Error loading featured habits:", err));
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-5">
-      <h2 className="text-3xl font-bold text-center text-primary mb-10">
+    <div className="max-w-6xl mx-auto mt-10 px-4">
+      <h2 className="text-3xl text-center font-bold mb-6 text-primary">
         Featured Habits
       </h2>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
-        {habits.map((h) => (
-          <motion.div
-            key={h._id}
-            className="card bg-base-200 shadow-lg border border-base-300"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {habits.map((habit) => (
+          <div
+            key={habit._id}
+            className="relative bg-white shadow-lg p-5 rounded-2xl border hover:shadow-xl transition-all"
           >
-            <figure>
+            {/* Created Date Top-Right */}
+            <span className="absolute top-3 right-3 text-xs text-gray-500">
+              {habit.createdAt
+                ? new Date(habit.createdAt).toLocaleDateString()
+                : "N/A"}
+            </span>
+
+            <h3 className="text-xl font-bold mb-2">{habit.title}</h3>
+            <p className="text-gray-600 mb-2">{habit.description}</p>
+
+            <p className="text-sm bg-indigo-100 text-primary inline-block px-3 py-1 rounded-full mb-4">
+              {habit.category}
+            </p>
+
+            {habit.image && (
               <img
-                src={h.image || "https://i.ibb.co/h9k1tB0/default.jpg"}
-                className="h-48 w-full object-cover"
+                src={habit.image}
+                alt={habit.title}
+                className="w-full h-40 object-cover rounded-xl mb-4"
               />
-            </figure>
-
-            <div className="card-body">
-              <h2 className="text-xl font-bold">{h.title}</h2>
-              <p className="text-sm opacity-80">{h.description.slice(0, 70)}...</p>
-
-              <p className="text-sm mt-2">
-                <b>Category:</b> {h.category}
-              </p>
-
-              <p className="text-sm">
-                <b>Creator:</b> {h.user_name}
-              </p>
-
-              <div className="card-actions mt-3">
-                <Link
-                  to={`/habits/${h._id}`}
-                  className="btn btn-primary btn-sm w-full"
-                >
-                  View Details
-                </Link>
-              </div>
-            </div>
-          </motion.div>
+            )}
+            <br />
+            <Link
+              to={`/habits/${habit._id}`}
+              className="btn bg-primary text-white w-fit"
+            >
+              View Details
+            </Link>
+          </div>
         ))}
-
       </div>
     </div>
   );

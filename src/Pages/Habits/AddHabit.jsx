@@ -1,13 +1,13 @@
-import React, { useState, use } from "react";
+import React, { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../provider/AuthProvider";
 
 const AddHabit = () => {
-  const { dbUser } = use(AuthContext);
+  const { dbUser } = useContext(AuthContext);
   const [imgURL, setImgURL] = useState("");
 
   // ImgBB API Key
-  const imgBBKey = "YOUR_IMGBB_API_KEY";
+  const imgBBKey = "d9c3fc2ae4b6969c4cec0676a44db6cf";
 
   // Image Upload Handler
   const handleImageUpload = async (e) => {
@@ -45,6 +45,7 @@ const AddHabit = () => {
     const description = form.description.value;
     const category = form.category.value;
     const reminder_time = form.reminder.value;
+    const createdAt = form.createdAt.value; // <-- new field
     const email = dbUser?.email;
     const name = dbUser?.name;
 
@@ -53,12 +54,14 @@ const AddHabit = () => {
       description,
       category,
       reminder_time,
+      createdAt, // store created date
       image: imgURL,
       user_email: email,
       user_name: name,
+      completionHistory: [],
     };
 
-    fetch("https://your-server-url.com/habits", {
+    fetch("http://localhost:3000/habits", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newHabit),
@@ -132,6 +135,17 @@ const AddHabit = () => {
           <input
             type="time"
             name="reminder"
+            className="input input-bordered w-full"
+            required
+          />
+        </div>
+
+        {/* Created Date */}
+        <div className="form-control">
+          <label className="font-medium mb-1">Created Date</label>
+          <input
+            type="date"
+            name="createdAt"
             className="input input-bordered w-full"
             required
           />

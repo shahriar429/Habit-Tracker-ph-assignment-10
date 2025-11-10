@@ -14,13 +14,12 @@ const MyHabits = () => {
 
     setLoading(true);
 
-    fetch(`https://your-server-url.com/habits?email=${user.email}`)
+    fetch(`http://localhost:3000/habits?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => setHabits(data))
       .catch((err) => console.error("Error loading habits:", err))
       .finally(() => setLoading(false));
   }, [user?.email]);
-
 
   // Delete Habit
   const handleDeleteHabit = (_id) => {
@@ -33,13 +32,15 @@ const MyHabits = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`https://your-server-url.com/habits/${_id}`, {
-          method: "DELETE",
-        })
+        fetch(`http://localhost:3000/habits/${_id}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((data) => {
             if (data.deletedCount) {
-              Swal.fire("Deleted!", "Habit removed successfully.", "success");
+              Swal.fire(
+                "Deleted!",
+                "Habit removed successfully.",
+                "success"
+              );
               const remaining = habits.filter((h) => h._id !== _id);
               setHabits(remaining);
             }
@@ -48,29 +49,64 @@ const MyHabits = () => {
     });
   };
 
+  // Calculate daily streak for a habit
+  const getStreak = (completionHistory = []) => {
+    if (!completionHistory || completionHistory.length === 0) return 0;
 
-  // Mark Habit as Complete
-  const handleMarkComplete = (habit) => {
-    const updated = {
-      ...habit,
-      current_streak: habit.current_streak + 1,
-    };
+    const sortedDates = [...completionHistory]
+      .map((d) => new Date(d))
+      .sort((a, b) => b - a);
 
-    fetch(`https://your-server-url.com/habits/${habit._id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(updated),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        Swal.fire("Completed!", "Habit marked as complete.", "success");
-        const updatedList = habits.map((h) =>
-          h._id === habit._id ? updated : h
-        );
-        setHabits(updatedList);
-      });
+    let streak = 0;
+    let checkDate = new Date();
+
+    for (let date of sortedDates) {
+      const dateStr = date.toISOString().split("T")[0];
+      const checkStr = checkDate.toISOString().split("T")[0];
+
+      if (dateStr === checkStr) {
+        streak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else if (dateStr < checkStr) {
+        break;
+      }
+    }
+
+    return streak;
   };
 
+  // Mark Habit as Complete
+  const handleMarkComplete = async (habit) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/habits/complete/${habit._id}`,
+        { method: "PATCH" }
+      );
+      const data = await res.json();
+
+      if (res.ok) {
+        Swal.fire("Completed!", "Habit marked as complete.", "success");
+
+        const today = new Date().toISOString().split("T")[0];
+
+        // Update UI instantly
+        setHabits((prev) =>
+          prev.map((h) =>
+            h._id === habit._id
+              ? {
+                  ...h,
+                  completionHistory: [...(h.completionHistory || []), today],
+                }
+              : h
+          )
+        );
+      } else {
+        Swal.fire("Oops!", data.message, "error");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Loading
   if (loading)
@@ -79,7 +115,6 @@ const MyHabits = () => {
         <span className="loading loading-spinner text-primary w-12 h-12"></span>
       </div>
     );
-
 
   return (
     <div className="p-6">
@@ -93,7 +128,7 @@ const MyHabits = () => {
             <tr className="text-primary text-lg">
               <th>Title</th>
               <th>Category</th>
-              <th>Current Streak</th>
+              <th>Daily Streak</th>
               <th>Created Date</th>
               <th className="text-center">Actions</th>
             </tr>
@@ -104,15 +139,13 @@ const MyHabits = () => {
               <tr key={habit._id}>
                 <td className="font-semibold">{habit.title}</td>
                 <td>{habit.category}</td>
-                <td>{habit.current_streak || 0}</td>
+                <td>{getStreak(habit.completionHistory)}</td>
                 <td>
                   {habit.createdAt
                     ? new Date(habit.createdAt).toLocaleDateString()
                     : "N/A"}
                 </td>
-
                 <td className="flex gap-2 justify-center">
-
                   <Link
                     to={`/habits/update/${habit._id}`}
                     className="btn btn-outline btn-primary btn-sm"
@@ -133,7 +166,6 @@ const MyHabits = () => {
                   >
                     Mark Complete
                   </button>
-
                 </td>
               </tr>
             ))}

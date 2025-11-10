@@ -16,14 +16,14 @@ const Banner = () => {
       >
         {/* Slide 1 */}
         <SwiperSlide>
-          <div className="flex flex-col justify-center items-center h-[50vh] bg-[url('https://i.pinimg.com/originals/4b/36/ab/4b36ab68b620383dc87698126aa578a0.jpg')] bg-cover bg-center text-white text-center px-4 relative">
-            <div className="absolute inset-0 bg-opacity-50"></div>
+          <div className="flex flex-col justify-center items-center h-[70vh] bg-[url('https://images.unsplash.com/photo-1564510714747-69c3bc1fab41?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aGFiaXQlMjB0cmFja2VyfGVufDB8fDB8fHww')] bg-cover bg-center text-white text-center px-4 relative">
+            <div className="absolute inset-0 bg-black/50"></div>
             <div className="relative z-10">
               <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg">
-                Manage Money, Build Freedom
+                Track Your Habits, Build Your Life
               </h1>
               <p className="mt-4 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                Take control of your financial journey — start saving, tracking, and growing smarter.
+                Stay consistent, form positive routines, and achieve your personal goals every day.
               </p>
             </div>
           </div>
@@ -31,14 +31,14 @@ const Banner = () => {
 
         {/* Slide 2 */}
         <SwiperSlide>
-          <div className="flex flex-col justify-center items-center h-[50vh] bg-[url('https://img.freepik.com/premium-photo/midsection-business-people-analyzing-graphs-desk-office_1048944-1384731.jpg?semt=ais_hybrid&w=740&q=80')] bg-cover bg-center text-white text-center px-4 relative">
+          <div className="flex flex-col justify-center items-center h-[70vh] bg-[url('https://cdn.shopify.com/s/files/1/0503/2794/5379/files/S_S-Habit-Tracking-Will_Change-Your-Life2.jpg?v=1629707509')] bg-cover bg-center text-white text-center px-4 relative">
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
             <div className="relative z-10">
               <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg">
-                Plan. Save. Grow.
+                Build Streaks, See Progress
               </h1>
               <p className="mt-4 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                Smart budgeting and financial awareness are the first steps to wealth creation.
+                Track your daily habits, maintain streaks, and celebrate your growth over time.
               </p>
             </div>
           </div>
@@ -46,14 +46,14 @@ const Banner = () => {
 
         {/* Slide 3 */}
         <SwiperSlide>
-          <div className="flex flex-col justify-center items-center h-[50vh] bg-[url('https://cdn.pixabay.com/photo/2024/06/18/03/40/finance-8836902_640.jpg')] bg-cover bg-center text-white text-center px-4 relative">
+          <div className="flex flex-col justify-center items-center h-[70vh] bg-[url('https://static1.squarespace.com/static/5fde97675b7bc966055fa16e/612461d35fa70600c5d45392/622ba70a29b8cb0f08e2c443/1647030474893/12.27.2021+1.jpg?format=1500w')] bg-cover bg-center text-white text-center px-4 relative">
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             <div className="relative z-10">
               <h1 className="text-4xl md:text-6xl font-extrabold drop-shadow-lg">
-                Invest Today, Secure Tomorrow
+                Achieve Goals, One Habit at a Time
               </h1>
               <p className="mt-4 text-lg md:text-xl font-light max-w-2xl mx-auto">
-                Discover financial tools and insights that help your money work for you.
+                Set reminders, track consistency, and turn small daily actions into life-changing results.
               </p>
             </div>
           </div>

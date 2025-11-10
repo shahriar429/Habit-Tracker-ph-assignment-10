@@ -29,7 +29,7 @@ const Navbar = () => {
       <li><NavLink to="/add-habit">Add Habit</NavLink></li>
       <li><NavLink to="/my-habits">My Habit</NavLink></li>
       <li><NavLink to="/profile">My Profile</NavLink></li>
-      <li><NavLink to="/public-habit">Public Habit</NavLink></li>
+      <li><NavLink to="/public-habits">Public Habit</NavLink></li>
     </>
   );
 
@@ -77,7 +77,7 @@ const Navbar = () => {
             className="flex items-center gap-2 text-xl text-secondary"
           >
             <img src={habitifyLogo} className="w-10 h-[35px]" alt="FinEase logo" />
-            <h2 className="font-bold">
+            <h2 className="font-bold text-sm md:text-lg">
               Habit<span className="text-primary">ify</span>
             </h2>
           </Link>
