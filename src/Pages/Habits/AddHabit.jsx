@@ -1,99 +1,98 @@
-import React, { use, useState } from "react";
+import React, { useState, use } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../provider/AuthProvider";
 
-const AddTransaction = () => {
-  const { dbUser  } = use(AuthContext);
-  const [transactions, setTransactions] = useState([]);
+const AddHabit = () => {
+  const { dbUser } = use(AuthContext);
+  const [imgURL, setImgURL] = useState("");
 
-  const handleAddTransaction = (e) => {
+  // ImgBB API Key
+  const imgBBKey = "YOUR_IMGBB_API_KEY";
+
+  // Image Upload Handler
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const uploadRes = await fetch(
+      `https://api.imgbb.com/1/upload?key=${imgBBKey}`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const result = await uploadRes.json();
+    if (result.success) {
+      setImgURL(result.data.url);
+      Swal.fire({
+        icon: "success",
+        title: "Image uploaded!",
+        timer: 1200,
+        showConfirmButton: false,
+      });
+    }
+  };
+
+  const handleAddHabit = (e) => {
     e.preventDefault();
 
     const form = e.target;
-    const type = form.type.value;
-    const category = form.category.value;
-    const amount = parseFloat(form.amount.value);
+    const title = form.title.value;
     const description = form.description.value;
-    const date = form.date.value;
+    const category = form.category.value;
+    const reminder_time = form.reminder.value;
     const email = dbUser?.email;
     const name = dbUser?.name;
 
-    const newTransaction = {
-      type,
-      category,
-      amount,
+    const newHabit = {
+      title,
       description,
-      date,
+      category,
+      reminder_time,
+      image: imgURL,
       user_email: email,
-      name,
+      user_name: name,
     };
 
-    fetch("https://finease-server-c7jy.onrender.com/transactions", {
+    fetch("https://your-server-url.com/habits", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify(newTransaction),
+      body: JSON.stringify(newHabit),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.insertedId) {
           Swal.fire({
-            position: "center",
             icon: "success",
-            title: "Transaction added successfully!",
-            showConfirmButton: false,
+            title: "Habit Added Successfully!",
             timer: 1500,
+            showConfirmButton: false,
           });
-          newTransaction._id = data.insertedId;
-          const newTransactions = [...transactions, newTransaction];
-          newTransactions.sort((a, b) => b.date - a.data);
-          setTransactions(newTransactions);
+          form.reset();
+          setImgURL("");
         }
       });
-      form.reset();
   };
 
   return (
     <div className="max-w-lg mx-auto bg-base-200 my-8 p-8 rounded-2xl shadow-lg border border-base-300">
       <h2 className="text-3xl font-bold text-center mb-8 text-primary">
-        Add New Transaction
+        Add New Habit
       </h2>
 
-      <form onSubmit={handleAddTransaction} className="space-y-2">
-        {/* Type */}
-        <div className="form-control">
-          <label className="block mb-2 font-medium text-base">Type</label>
-          <select name="type" className="select select-bordered w-full" required>
-            <option value="">Select type</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-        </div>
+      <form onSubmit={handleAddHabit} className="space-y-2">
 
-        {/* Category */}
+        {/* Habit Title */}
         <div className="form-control">
-          <label className="block mb-2 font-medium text-base">Category</label>
-          <select
-            name="category"
-            className="select select-bordered w-full"
-            required
-          >
-            <option value="">Select category</option>
-            <option value="Salary">Salary</option>
-            <option value="Food">Food</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Transport">Transport</option>
-            <option value="Bills">Bills</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-
-        {/* Amount */}
-        <div className="form-control">
-          <label className="block mb-2 font-medium text-base">Amount</label>
+          <label className="font-medium mb-1">Habit Title</label>
           <input
-            type="number"
-            name="amount"
-            placeholder="Enter amount"
+            type="text"
+            name="title"
+            placeholder="Enter habit title"
             className="input input-bordered w-full"
             required
           />
@@ -101,7 +100,7 @@ const AddTransaction = () => {
 
         {/* Description */}
         <div className="form-control">
-          <label className="block mb-2 font-medium text-base">Description</label>
+          <label className="font-medium mb-1">Description</label>
           <textarea
             name="description"
             placeholder="Short description..."
@@ -110,23 +109,57 @@ const AddTransaction = () => {
           ></textarea>
         </div>
 
-        {/* Date */}
+        {/* Category */}
         <div className="form-control">
-          <label className="block mb-2 font-medium text-base">Date</label>
+          <label className="font-medium mb-1">Category</label>
+          <select
+            name="category"
+            className="select select-bordered w-full"
+            required
+          >
+            <option value="">Select Category</option>
+            <option value="Morning">Morning</option>
+            <option value="Work">Work</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Evening">Evening</option>
+            <option value="Study">Study</option>
+          </select>
+        </div>
+
+        {/* Reminder Time */}
+        <div className="form-control">
+          <label className="font-medium mb-1">Reminder Time</label>
           <input
-            type="date"
-            name="date"
+            type="time"
+            name="reminder"
             className="input input-bordered w-full"
             required
           />
         </div>
 
+        {/* Image Upload */}
+        <div className="form-control">
+          <label className="font-medium mb-1">Upload Image (Optional)</label>
+          <input
+            type="file"
+            onChange={handleImageUpload}
+            className="file-input file-input-bordered w-full"
+            accept="image/*"
+          />
+        </div>
+        {imgURL && (
+          <img
+            src={imgURL}
+            alt="Uploaded"
+            className="w-32 mt-2 rounded-md mx-auto"
+          />
+        )}
+
         {/* User Name */}
         <div className="form-control">
-          <label className="block mb-2 font-medium text-base">User Name</label>
+          <label className="font-medium mb-1">User Name</label>
           <input
             type="text"
-            name="username"
             className="input input-bordered w-full bg-base-300"
             defaultValue={dbUser?.name}
             readOnly
@@ -135,10 +168,9 @@ const AddTransaction = () => {
 
         {/* User Email */}
         <div className="form-control">
-          <label className="block mb-2 font-medium text-base">User Email</label>
+          <label className="font-medium mb-1">User Email</label>
           <input
             type="email"
-            name="email"
             className="input input-bordered w-full bg-base-300"
             defaultValue={dbUser?.email}
             readOnly
@@ -150,11 +182,11 @@ const AddTransaction = () => {
           type="submit"
           className="btn btn-primary w-full text-lg font-semibold mt-4"
         >
-          Add Transaction
+          Add Habit
         </button>
       </form>
     </div>
   );
 };
 
-export default AddTransaction;
+export default AddHabit;
