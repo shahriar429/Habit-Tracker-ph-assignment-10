@@ -27,7 +27,7 @@ const Navbar = () => {
     <>
       <li><NavLink to="/">Home</NavLink></li>
       <li><NavLink to="/add-habit">Add Habit</NavLink></li>
-      <li><NavLink to="/my-habit">My Habit</NavLink></li>
+      <li><NavLink to="/my-habits">My Habit</NavLink></li>
       <li><NavLink to="/profile">My Profile</NavLink></li>
       <li><NavLink to="/public-habit">Public Habit</NavLink></li>
     </>

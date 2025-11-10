@@ -4,6 +4,8 @@ import Login from "../Pages/Authentication/Login";
 import Register from "../Pages/Authentication/Register";
 import MyProfile from "../Pages/Profile/MyProfile";
 import AddHabit from "../Pages/Habits/AddHabit";
+import MyHabits from "../Pages/Habits/MyHabits";
+import Home from "../Pages/Home/Home";
 
 export const router = createBrowserRouter([
   {
@@ -11,8 +13,8 @@ export const router = createBrowserRouter([
     Component: HomeLayout,
     children: [
       {
-        // index: true,
-        // Component: 
+        index: true,
+        Component: Home
       },
       {
         path: 'login',
@@ -29,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: 'add-habit',
         Component: AddHabit
+      },
+      {
+        path: 'my-habits',
+        Component: MyHabits
       }
     ]
   }
