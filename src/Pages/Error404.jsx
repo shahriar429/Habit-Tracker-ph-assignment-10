@@ -1,6 +1,6 @@
 import React from 'react';
 import error404 from '/error-404.png'
-
+ 
 const Error404 = () => {
     return (
         <div className='flex flex-col justify-center items-center min-h-screen w-11/12 mx-auto'>
