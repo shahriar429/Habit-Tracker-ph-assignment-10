@@ -159,5 +159,5 @@ const HabitDetails = () => {
     </div>
   );
 };
-
+ 
 export default HabitDetails;
