@@ -51,7 +51,7 @@ const PublicHabits = () => {
                 See Details
               </button>
             </Link>
-          </div>
+          </div> 
         ))}
       </div>
     </div>
