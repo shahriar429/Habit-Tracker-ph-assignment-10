@@ -10,6 +10,7 @@ import PublicHabits from "../Pages/Habits/PublicHabits";
 import HabitDetails from "../Pages/Habits/HabitDetails";
 import UpdateHabit from "../Pages/Habits/UpdateHabit";
 import Error404 from "../Pages/Error404";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -18,44 +19,66 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
       },
       {
-        path: 'login',
-        Component: Login
+        path: "login",
+        Component: Login,
       },
       {
-        path: 'register',
-        Component: Register
+        path: "register",
+        Component: Register,
       },
       {
-        path: 'profile',
-        Component: MyProfile
+        path: "profile",
+        element: (
+          <PrivateRoutes>
+            <MyProfile />
+          </PrivateRoutes>
+        ),
       },
       {
-        path: 'add-habit',
-        Component: AddHabit
+        path: "add-habit",
+        element: (
+          <PrivateRoutes>
+            <AddHabit />
+          </PrivateRoutes>
+        ),
       },
       {
-        path: 'my-habits',
-        Component: MyHabits
+        path: "my-habits",
+
+        element: (
+          <PrivateRoutes>
+            <MyHabits />
+          </PrivateRoutes>
+        ),
       },
       {
-        path: 'public-habits',
-        Component: PublicHabits
+        path: "public-habits",
+        Component: PublicHabits,
       },
       {
-        path: 'habits/:id',
+        path: "habits/:id",
         Component: HabitDetails,
+        element: (
+          <PrivateRoutes>
+            <HabitDetails />
+          </PrivateRoutes>
+        ),
       },
       {
-        path: 'habits/update/:id',
-        Component: UpdateHabit
+        path: "habits/update/:id",
+        element: (
+          <PrivateRoutes>
+            <UpdateHabit />
+          </PrivateRoutes>
+        ),
       },
       {
-        path: '*',
-        Component: Error404
-      }
+        path: "*",
+        Component: Error404,
+      },
     ],
-  }
+  },
 ]);
