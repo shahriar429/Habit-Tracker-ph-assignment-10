@@ -27,7 +27,7 @@ const UpdateHabit = () => {
         body: form,
       }
     );
-
+ 
     const data = await res.json();
     return data.data.url; // return hosted image link
   };
