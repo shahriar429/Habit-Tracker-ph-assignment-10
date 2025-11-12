@@ -17,7 +17,6 @@ const HabitDetails = () => {
       });
   }, [id]);
 
-  // === Calculate 30-day progress ===
   const getProgress = () => {
     if (!habit?.completionHistory) return 0;
 
@@ -36,7 +35,6 @@ const HabitDetails = () => {
     return Math.round((completedDays.length / 30) * 100);
   };
 
-  // === Calculate daily streak ===
   const getStreak = () => {
     if (!habit?.completionHistory || habit.completionHistory.length === 0)
       return 0;
@@ -63,7 +61,6 @@ const HabitDetails = () => {
     return streak;
   };
 
-  // === Mark Complete Handler ===
   const handleMarkComplete = async () => {
     try {
       const res = await fetch(

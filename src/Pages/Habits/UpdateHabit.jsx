@@ -29,16 +29,16 @@ const UpdateHabit = () => {
     );
  
     const data = await res.json();
-    return data.data.url; // return hosted image link
+    return data.data.url;
   };
-
+ 
   const handleUpdateHabit = async (e) => {
     e.preventDefault();
     const form = e.target;
 
     let imageURL = habit.image;
 
-    // If new image uploaded → upload to ImgBB
+
     if (newImage) {
       imageURL = await uploadImageToImgbb(newImage);
     }

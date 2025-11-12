@@ -23,7 +23,7 @@ const FeaturedHabits = () => {
             key={habit._id}
             className="relative bg-white shadow-lg p-5 rounded-2xl border hover:shadow-xl transition-all"
           >
-            {/* Created Date Top-Right */}
+
             <span className="absolute top-3 right-3 text-xs text-gray-500">
               {habit.createdAt
                 ? new Date(habit.createdAt).toLocaleDateString()

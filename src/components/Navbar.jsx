@@ -70,7 +70,7 @@ const Navbar = () => {
               {links}
             </ul>
           </div>
-
+ 
           {/* Logo */}
           <Link
             to={"/"}
