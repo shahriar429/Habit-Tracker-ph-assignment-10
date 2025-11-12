@@ -20,7 +20,7 @@ const Login = () => {
 
   const checkDuplicateEmail = async (email) => {
     try {
-      const res = await fetch(`http://localhost:3000/users?email=${email}`);
+      const res = await fetch(`https://habit-tracker-server-qpky.onrender.com/users?email=${email}`);
       const data = await res.json();
       return data.length > 0;
     } catch (err) {
@@ -84,7 +84,7 @@ const Login = () => {
 
         if (!exists) {
           // Save to DB only if new user
-          await fetch("http://localhost:3000/users", {
+          await fetch("https://habit-tracker-server-qpky.onrender.com/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(googleUser),

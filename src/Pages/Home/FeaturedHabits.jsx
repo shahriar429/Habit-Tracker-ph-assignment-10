@@ -5,7 +5,7 @@ const FeaturedHabits = () => {
   const [habits, setHabits] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/featured-habits")
+    fetch("https://habit-tracker-server-qpky.onrender.com/featured-habits")
       .then((res) => res.json())
       .then((data) => setHabits(data))
       .catch((err) => console.error("Error loading featured habits:", err));

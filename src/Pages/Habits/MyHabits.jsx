@@ -14,7 +14,7 @@ const MyHabits = () => {
 
     setLoading(true);
 
-    fetch(`http://localhost:3000/habits?email=${user.email}`)
+    fetch(`https://habit-tracker-server-qpky.onrender.com/habits?email=${user.email}`)
       .then((res) => res.json())
       .then((data) => setHabits(data))
       .catch((err) => console.error("Error loading habits:", err))
@@ -32,7 +32,7 @@ const MyHabits = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch(`http://localhost:3000/habits/${_id}`, { method: "DELETE" })
+        fetch(`https://habit-tracker-server-qpky.onrender.com/habits/${_id}`, { method: "DELETE" })
           .then((res) => res.json())
           .then((data) => {
             if (data.deletedCount) {
@@ -79,7 +79,7 @@ const MyHabits = () => {
   const handleMarkComplete = async (habit) => {
     try {
       const res = await fetch(
-        `http://localhost:3000/habits/complete/${habit._id}`,
+        `https://habit-tracker-server-qpky.onrender.com/habits/complete/${habit._id}`,
         { method: "PATCH" }
       );
       const data = await res.json();

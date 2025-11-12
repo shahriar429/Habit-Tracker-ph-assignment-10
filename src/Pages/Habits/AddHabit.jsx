@@ -61,7 +61,7 @@ const AddHabit = () => {
       completionHistory: [],
     };
 
-    fetch("http://localhost:3000/habits", {
+    fetch("https://habit-tracker-server-qpky.onrender.com/habits", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(newHabit),

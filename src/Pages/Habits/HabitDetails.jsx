@@ -9,7 +9,7 @@ const HabitDetails = () => {
 
   // Fetch habit details
   useEffect(() => {
-    fetch(`http://localhost:3000/habits/${id}`)
+    fetch(`https://habit-tracker-server-qpky.onrender.com/habits/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setHabit(data);
@@ -46,7 +46,7 @@ const HabitDetails = () => {
       .sort((a, b) => b - a);
 
     let streak = 0;
-    let checkDate = new Date(); // today
+    let checkDate = new Date();
 
     for (let date of dates) {
       const dateStr = date.toISOString().split("T")[0];
@@ -67,7 +67,7 @@ const HabitDetails = () => {
   const handleMarkComplete = async () => {
     try {
       const res = await fetch(
-        `http://localhost:3000/habits/complete/${id}`,
+        `https://habit-tracker-server-qpky.onrender.com/habits/complete/${id}`,
         {
           method: "PATCH",
         }
@@ -76,7 +76,6 @@ const HabitDetails = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // Update UI instantly
         setHabit((prev) => ({
           ...prev,
           completionHistory: [
@@ -94,10 +93,20 @@ const HabitDetails = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  if (loading)
+    return (
+      <p className="text-center mt-10 text-gray-800 dark:text-gray-200">
+        Loading...
+      </p>
+    );
 
   return (
-    <div className="max-w-3xl mx-auto p-6 shadow rounded mt-10">
+    <div
+      className="max-w-3xl mx-auto p-6 shadow rounded my-10 
+                 bg-white dark:bg-gray-900 
+                 text-gray-800 dark:text-gray-200 
+                 border border-gray-200 dark:border-gray-700"
+    >
       {/* Habit Image */}
       {habit.image && (
         <img
@@ -108,24 +117,44 @@ const HabitDetails = () => {
       )}
 
       {/* Habit Title */}
-      <h2 className="text-3xl font-bold mb-2">{habit.title}</h2>
+      <h2 className="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">
+        {habit.title}
+      </h2>
 
       {/* Category */}
-      <p className="text-gray-700 mb-2">
-        <strong>Category:</strong> {habit.category}
+      <p className="text-gray-700 dark:text-gray-300 mb-2">
+        <strong className="text-gray-900 dark:text-gray-100">Category:</strong>{" "}
+        {habit.category}
       </p>
 
       {/* Description */}
-      <p className="mb-4">
-        <strong>Description:</strong> {habit.description}
+      <p className="mb-4 text-gray-700 dark:text-gray-300">
+        <strong className="text-gray-900 dark:text-gray-100">
+          Description:
+        </strong>{" "}
+        {habit.description}
       </p>
 
       {/* Creator Info */}
-      <div className="mb-4 p-4 bg-gray-100 rounded">
-        <p><strong>Created By:</strong> {habit.user_name || "Unknown"}</p>
-        <p><strong>Email:</strong> {habit.user_email || "N/A"}</p>
+      <div
+        className="mb-4 p-4 rounded 
+                   bg-gray-100 dark:bg-gray-800 
+                   border border-gray-300 dark:border-gray-700"
+      >
         <p>
-          <strong>Created Date:</strong>{" "}
+          <strong className="text-gray-900 dark:text-gray-100">
+            Created By:
+          </strong>{" "}
+          {habit.user_name || "Unknown"}
+        </p>
+        <p>
+          <strong className="text-gray-900 dark:text-gray-100">Email:</strong>{" "}
+          {habit.user_email || "N/A"}
+        </p>
+        <p>
+          <strong className="text-gray-900 dark:text-gray-100">
+            Created Date:
+          </strong>{" "}
           {habit.createdAt
             ? new Date(habit.createdAt).toLocaleDateString()
             : "N/A"}
@@ -133,31 +162,38 @@ const HabitDetails = () => {
       </div>
 
       {/* Streak */}
-      <p className="mb-3 text-lg font-semibold">🔥 Streak: {getStreak()} days</p>
+      <p className="mb-3 text-lg font-semibold text-gray-900 dark:text-gray-100">
+        🔥 Streak: {getStreak()} days
+      </p>
 
       {/* Progress Bar */}
       <div className="mb-5">
-        <p className="mb-1 font-medium">Last 30 Days Progress</p>
-        <div className="w-full bg-gray-300 rounded h-4">
+        <p className="mb-1 font-medium text-gray-900 dark:text-gray-100">
+          Last 30 Days Progress
+        </p>
+        <div className="w-full bg-gray-300 dark:bg-gray-700 rounded h-4">
           <div
             className="bg-green-600 h-4 rounded"
             style={{ width: `${getProgress()}%` }}
           ></div>
         </div>
-        <p>{getProgress()}% completed</p>
+        <p className="text-gray-800 dark:text-gray-300">
+          {getProgress()}% completed
+        </p>
       </div>
 
       {/* Mark Complete Button */}
       <button
         onClick={handleMarkComplete}
-        className="bg-blue-600 text-white px-6 py-2 rounded mt-4"
+        className="bg-blue-600 hover:bg-blue-700 text-white 
+                   px-6 py-2 rounded mt-4 w-full"
       >
         Mark Complete
       </button>
 
-      <ToastContainer />
+      <ToastContainer theme="dark" />
     </div>
   );
 };
- 
+
 export default HabitDetails;

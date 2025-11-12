@@ -9,7 +9,7 @@ const UpdateHabit = () => {
   const [newImage, setNewImage] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/habits/${id}`)
+    fetch(`https://habit-tracker-server-qpky.onrender.com/habits/${id}`)
       .then((res) => res.json())
       .then((data) => setHabit(data))
       .catch((err) => console.error("Error loading habit:", err));
@@ -50,7 +50,7 @@ const UpdateHabit = () => {
       image: imageURL,
     };
 
-    const res = await fetch(`http://localhost:3000/habits/update/${id}`, {
+    const res = await fetch(`https://habit-tracker-server-qpky.onrender.com/habits/update/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedHabit),
