@@ -1,4 +1,6 @@
 # ⏰ Habitify – Smart Habit Tracking Web App
+<img width="960" height="540" alt="Screenshot_253" src="https://github.com/user-attachments/assets/b324b504-443e-44c5-9919-dd8f9f1ea087" />
+<img width="960" height="540" alt="Screenshot_254" src="https://github.com/user-attachments/assets/4df0cb77-a9a6-4cdf-9721-b03a85a556fa" />
 
 **Live Website:** [https://habit-tracker-6479d.web.app//](https://habit-tracker-6479d.web.app//)
 
@@ -57,9 +59,56 @@ Habitify is a modern Habit Tracking Web Application that helps users build posit
 - MongoDB  
 
 ---
- 
-## 📦 Installation (Local Development)
+ ## 📦 Dependencies
+```json
+"dependencies": {
+    "@tailwindcss/vite": "^4.1.17",
+    "firebase": "^12.5.0",
+    "lucide-react": "^0.553.0",
+    "motion": "^12.23.24",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-icons": "^5.5.0",
+    "react-router": "^7.9.6",
+    "react-toastify": "^11.0.5",
+    "sweetalert2": "^11.26.3",
+    "swiper": "^12.0.3",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "daisyui": "^5.5.5",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "vite": "^7.2.2"
+  }
+```
+## 🧾 Installation (for local development)
+1. Clone the repository:
+   ```bash
+  git clone https://github.com/shahriar429/Habit-Tracker-ph-assignment-10
 
-### **1. Clone the repository**
+2. Install dependencies:
 ```bash
-git clone https://github.com/shahriar429/Habit-Tracker-ph-assignment-10
+npm install
+```
+
+3. Run the development server:
+    ```bash
+    npm run dev
+
+## 🔗 Project Links
+
+- **Client-side Repository:**  
+  https://github.com/shahriar429/Habit-Tracker-ph-assignment-10
+
+- **Server-side Repository:**  
+  [https://github.com/masrafi143/FinEase-server.git](https://github.com/shahriar429/Habit-Tracker-server)
+
+- **Live Website:**  
+  https://habit-tracker-6479d.web.app/
